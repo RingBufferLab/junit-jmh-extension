@@ -103,24 +103,24 @@ public class MyTest {
 There is `3` annotations to enable benchmark to run, to be add on test classes.
 
 
-Will run annotated method as benchmark instead of test when a system property called `enable-benchmark` is set to `yes` (`-Denable-benchmark=yes`)
+**Example below will run annotated method as benchmark instead of test when a system property called `enable-benchmark` is set to `yes` (`-Denable-benchmark=yes`)**
 ```
 @EnableBenchmarkOnSystemProperty(name = "enable-benchmark", value = "yes")
 ```
 
-Will run annotated method as benchmark instead of test when an environment variable called `ENABLE_BENCHMARK` is set to `on` (`export ENABLE_BENCHMARK=on`)
+**Example below will run annotated method as benchmark instead of test when an environment variable called `ENABLE_BENCHMARK` is set to `on` (`export ENABLE_BENCHMARK=on`)**
 ```
 @EnableBenchmarkOnEnvironment(name = "ENABLE_BENCHMARK", value = "on")
 ```
-Will run benchmark instead of test without condition
+**Example below will run annotated method as benchmark instead of test without condition**
 ```
 @EnableBenchmark
 ```
-
-Will run benchmark instead of test when static method "enableBenchmark" implemented on given class.
+**Example below will run annotated method as benchmark instead of test when static method "enableBenchmark" implemented on given class.**
 ```
 @EnableBenchmark(EnableBenchmarkOnSunday.class)
 ```
+With a custom implementation to run only on sunday
 ```java
 public class EnableBenchmarkOnSunday {
     public static boolean enableBenchmark() {
