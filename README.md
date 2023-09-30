@@ -65,8 +65,8 @@ Add and configure JMH annotation processor
 @ExtendWith(JMHJUnitExtension.class)
 @EnableBenchmark
 public class MyTest {
-    // No need to add @Test
-    @Benchmark
+    // No need to add @Test because already brought by @BenchmarkTest
+    @Benchmark // Required by JMH to generate benchmark wrapper
     @BenchmarkTest(configuration = @BenchmarkConfiguration(warmup = @Warmup(iterations = 1, batchSize = 1, time = 5), measurement = @Measurement(batchSize = 1, time = 1, iterations = 1)))
     public void baseline() {
 
@@ -90,8 +90,8 @@ public class MyTest {
     @Rule
     public JMHJUnitRule jmhRule = new JMHJUnitRule();
 
-    @Test
-    @Benchmark
+    @Test // Required by junit as in junit4 @Test can't be added on annotation type, it is not brought by our annotation @BenchmarkTest
+    @Benchmark // Required by JMH to generate benchmark wrapper
     @BenchmarkTest(configuration = @BenchmarkConfiguration(warmup = @Warmup(iterations = 1, batchSize = 1, time = 5), measurement = @Measurement(batchSize = 1, time = 1, iterations = 1)))
     public void baseline() {
 
