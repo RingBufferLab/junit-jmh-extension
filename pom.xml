@@ -13,8 +13,8 @@
     <description>Turn tests into benchmark with annotation</description>
 
     <modules>
-        <module>junit5-extension</module>
-        <module>junit4-extension</module>
+        <module>junit5</module>
+        <module>junit4</module>
         <module>core</module>
     </modules>
 

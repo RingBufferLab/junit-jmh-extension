@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>junit4-extension</artifactId>
+    <artifactId>junit4-jmh-rule</artifactId>
 
     <dependencies>
         <dependency>

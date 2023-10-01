@@ -58,7 +58,7 @@ Add and configure JMH annotation processor
 ```xml
 <dependency>
     <groupId>com.ringbufferlab.junit.benchmark</groupId>
-    <artifactId>junit5-extension</artifactId>
+    <artifactId>junit5-jmh-extension</artifactId>
 </dependency>
 ```
 ```java
@@ -78,7 +78,7 @@ public class MyTest {
 ```xml
 <dependency>
     <groupId>com.ringbufferlab.junit.benchmark</groupId>
-    <artifactId>junit4-extension</artifactId>
+    <artifactId>junit4-jmh-rule</artifactId>
 </dependency>
 ```
 ```java
