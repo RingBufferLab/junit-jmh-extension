@@ -6,6 +6,9 @@ import org.junit.runners.model.Statement;
 
 import java.lang.reflect.Method;
 
+/**
+ * Rule to turn {@link org.junit.Test} annotated method into {@link org.openjdk.jmh.annotations.Benchmark} method
+ */
 public class JMHJUnitRule implements TestRule {
     private final BenchmarkRunner benchmarkRunner;
 
@@ -16,7 +19,6 @@ public class JMHJUnitRule implements TestRule {
     @Override
     public Statement apply(Statement base, Description description) {
         return new Statement() {
-
             @Override
             public void evaluate() throws Throwable {
                 description.getClassName();

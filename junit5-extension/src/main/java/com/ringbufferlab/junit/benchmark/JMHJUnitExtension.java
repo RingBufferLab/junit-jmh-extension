@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+/**
+ * Rule to turn {@link org.junit.jupiter.api.Test} annotated method into {@link org.openjdk.jmh.annotations.Benchmark} method
+ */
 public class JMHJUnitExtension implements InvocationInterceptor, ExecutionCondition {
     private final BenchmarkRunner benchmarkRunner;
 
@@ -31,9 +34,6 @@ public class JMHJUnitExtension implements InvocationInterceptor, ExecutionCondit
     @Override
     public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext extensionContext) {
         Optional<Method> testMethod = extensionContext.getTestMethod();
-        if (testMethod.isPresent() && canRunBenchmark(testMethod.get()) && BenchmarkRunnerCondition.shouldRunBenchmark(testMethod.get())) {
-            ConditionEvaluationResult.disabled("");
-        }
         return ConditionEvaluationResult.enabled("");
     }
 

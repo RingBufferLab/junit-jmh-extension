@@ -5,8 +5,12 @@ import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.profile.Profiler;
+import org.openjdk.jmh.results.format.ResultFormatType;
+import org.openjdk.jmh.runner.Defaults;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
@@ -37,12 +41,14 @@ public class BenchmarkRunner {
         Optional<Fork> forkConfiguration = getForkConfiguration(annotation, classAnnotation);
         Optional<Warmup> warmupConfiguration = getWarmupConfiguration(annotation, classAnnotation);
         Optional<Measurement> measurementConfiguration = getMeasurementConfiguration(annotation, classAnnotation);
+        Optional<Class<? extends Profiler>[]> profilers = getProfilerConfiguration(annotation, classAnnotation);
+        Optional<String> resultFileConfiguration = getResultFileConfiguration(annotation, classAnnotation);
         Set<Options> options = new HashSet<>();
         for (Mode mode : getModeConfiguration(annotation, classAnnotation).map(BenchmarkMode::value).orElse(new Mode[]{Mode.AverageTime})) {
-            Options runnerOption = new OptionsBuilder()
+            ChainedOptionsBuilder chainedOptionsBuilder = new OptionsBuilder()
                     .include(benchmarkName)
                     // JVM config
-                    .forks(forkConfiguration.map(Fork::value).orElse(1))
+                    .forks(forkConfiguration.map(Fork::value).orElse(0))
                     .jvmArgs(forkConfiguration.map(Fork::jvmArgs).orElse(new String[]{}))
                     .jvmArgsAppend(forkConfiguration.map(Fork::jvmArgsAppend).orElse(new String[]{}))
                     .jvmArgsAppend(forkConfiguration.map(Fork::jvmArgsPrepend).orElse(new String[]{}))
@@ -51,18 +57,26 @@ public class BenchmarkRunner {
                     // Mode
                     .mode(mode)
                     // Warmup
-                    .warmupBatchSize(warmupConfiguration.map(Warmup::batchSize).orElse(1))
-                    .warmupIterations(warmupConfiguration.map(Warmup::iterations).orElse(5))
-                    .warmupTime(new TimeValue(warmupConfiguration.map(Warmup::time).orElse(5), warmupConfiguration.map(Warmup::timeUnit).orElse(TimeUnit.SECONDS)))
+                    .warmupBatchSize(warmupConfiguration.map(Warmup::batchSize).orElse(Defaults.WARMUP_BATCHSIZE))
+                    .warmupIterations(warmupConfiguration.map(Warmup::iterations).orElse(Defaults.WARMUP_ITERATIONS))
+                    .warmupTime(new TimeValue(warmupConfiguration.map(Warmup::time).orElse((int) Defaults.WARMUP_TIME.getTime()), warmupConfiguration.map(Warmup::timeUnit).orElse(TimeUnit.SECONDS)))
                     // Operations per invocation
                     .operationsPerInvocation(getOperationPerInvocation(annotation, classAnnotation))
                     // Measurement
-                    .measurementBatchSize(measurementConfiguration.map(Measurement::batchSize).orElse(1))
-                    .measurementIterations(measurementConfiguration.map(Measurement::iterations).orElse(5))
-                    .measurementTime(new TimeValue(measurementConfiguration.map(Measurement::time).orElse(5), measurementConfiguration.map(Measurement::timeUnit).orElse(TimeUnit.SECONDS)))
-                    .build();
+                    .measurementBatchSize(measurementConfiguration.map(Measurement::batchSize).orElse(Defaults.MEASUREMENT_BATCHSIZE))
+                    .measurementIterations(measurementConfiguration.map(Measurement::iterations).orElse(Defaults.MEASUREMENT_ITERATIONS))
+                    .measurementTime(new TimeValue(measurementConfiguration.map(Measurement::time).orElse((int) Defaults.MEASUREMENT_TIME.getTime()), measurementConfiguration.map(Measurement::timeUnit).orElse(TimeUnit.SECONDS)));
 
-            options.add(runnerOption);
+            if (profilers.isPresent()) {
+                for (Class<? extends Profiler> profilerClass : profilers.get()) {
+                    chainedOptionsBuilder.addProfiler(profilerClass);
+                }
+            }
+            if (resultFileConfiguration.isPresent()) {
+                chainedOptionsBuilder.result(resultFileConfiguration.get());
+                chainedOptionsBuilder.resultFormat(getResultFormatConfiguration(annotation, classAnnotation));
+            }
+            options.add(chainedOptionsBuilder.build());
         }
         return options;
     }
@@ -108,6 +122,16 @@ public class BenchmarkRunner {
         return Optional.empty();
     }
 
+    private static Optional<Class<? extends Profiler>[]> getProfilerConfiguration(BenchmarkConfiguration methodAnnotation, BenchmarkConfiguration classAnnotation) {
+        if (methodAnnotation.profilers().length != 0) {
+            return Optional.of(methodAnnotation.profilers());
+        }
+        if (classAnnotation != null && classAnnotation.profilers().length != 0) {
+            return Optional.of(classAnnotation.profilers());
+        }
+        return Optional.empty();
+    }
+
     private static int getThreadsConfiguration(BenchmarkConfiguration methodAnnotation, BenchmarkConfiguration classAnnotation) {
         int threads = methodAnnotation.threads();
         if (threads != 0) {
@@ -116,7 +140,29 @@ public class BenchmarkRunner {
         if (classAnnotation != null && classAnnotation.threads() != 0) {
             return classAnnotation.threads();
         }
-        return 1;
+        return Defaults.THREADS;
+    }
+
+    private static Optional<String> getResultFileConfiguration(BenchmarkConfiguration methodAnnotation, BenchmarkConfiguration classAnnotation) {
+        String resultFile = methodAnnotation.resultFile();
+        if (resultFile != null && !resultFile.isEmpty()) {
+            return Optional.of(resultFile);
+        }
+        if (classAnnotation != null && !classAnnotation.resultFile().isEmpty()) {
+            return Optional.of(classAnnotation.resultFile());
+        }
+        return Optional.empty();
+    }
+
+    private static ResultFormatType getResultFormatConfiguration(BenchmarkConfiguration methodAnnotation, BenchmarkConfiguration classAnnotation) {
+        ResultFormatType resultFormat = methodAnnotation.resultFormat();
+        if (resultFormat != null && !resultFormat.equals(ResultFormatType.CSV)) {
+            return resultFormat;
+        }
+        if (classAnnotation != null && !classAnnotation.resultFormat().equals(ResultFormatType.CSV)) {
+            return classAnnotation.resultFormat();
+        }
+        return ResultFormatType.CSV;
     }
 
     private static int getOperationPerInvocation(BenchmarkConfiguration methodAnnotation, BenchmarkConfiguration classAnnotation) {
@@ -127,6 +173,6 @@ public class BenchmarkRunner {
         if (classAnnotation != null && classAnnotation.operationPerInvocation() != 0) {
             return classAnnotation.operationPerInvocation();
         }
-        return 1;
+        return Defaults.OPS_PER_INVOCATION;
     }
 }

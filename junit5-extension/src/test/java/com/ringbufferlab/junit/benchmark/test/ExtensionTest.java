@@ -10,7 +10,6 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Warmup;
 
-
 @ExtendWith(JMHJUnitExtension.class)
 @EnableBenchmarkOnSystemProperty(name = "benchmark", value = "true")
 public class ExtensionTest {
