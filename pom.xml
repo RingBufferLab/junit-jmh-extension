@@ -16,6 +16,7 @@
         <module>junit5</module>
         <module>junit4</module>
         <module>core</module>
+        <module>spring-boot-3-integration</module>
     </modules>
 
     <properties>

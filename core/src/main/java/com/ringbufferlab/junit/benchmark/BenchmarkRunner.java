@@ -72,15 +72,15 @@ public class BenchmarkRunner {
                     // Mode
                     .mode(mode)
                     // Warmup
-                    .warmupBatchSize(warmupConfiguration.map(Warmup::batchSize).orElse(Defaults.WARMUP_BATCHSIZE))
-                    .warmupIterations(warmupConfiguration.map(Warmup::iterations).orElse(Defaults.WARMUP_ITERATIONS))
-                    .warmupTime(new TimeValue(warmupConfiguration.map(Warmup::time).orElse((int) Defaults.WARMUP_TIME.getTime()), warmupConfiguration.map(Warmup::timeUnit).orElse(TimeUnit.SECONDS)))
+                    .warmupBatchSize(warmupConfiguration.filter(c -> c.batchSize() > 0).map(Warmup::batchSize).orElse(Defaults.WARMUP_BATCHSIZE))
+                    .warmupIterations(warmupConfiguration.filter(c -> c.iterations() > 0).map(Warmup::iterations).orElse(Defaults.WARMUP_ITERATIONS))
+                    .warmupTime(new TimeValue(warmupConfiguration.filter(c -> c.time() > 0).map(Warmup::time).orElse((int) Defaults.WARMUP_TIME.getTime()), warmupConfiguration.map(Warmup::timeUnit).orElse(TimeUnit.SECONDS)))
                     // Operations per invocation
                     .operationsPerInvocation(getOperationPerInvocation(annotation, classAnnotation))
                     // Measurement
-                    .measurementBatchSize(measurementConfiguration.map(Measurement::batchSize).orElse(Defaults.MEASUREMENT_BATCHSIZE))
-                    .measurementIterations(measurementConfiguration.map(Measurement::iterations).orElse(Defaults.MEASUREMENT_ITERATIONS))
-                    .measurementTime(new TimeValue(measurementConfiguration.map(Measurement::time).orElse((int) Defaults.MEASUREMENT_TIME.getTime()), measurementConfiguration.map(Measurement::timeUnit).orElse(TimeUnit.SECONDS)));
+                    .measurementBatchSize(measurementConfiguration.filter(c -> c.batchSize() > 0).map(Measurement::batchSize).orElse(Defaults.MEASUREMENT_BATCHSIZE))
+                    .measurementIterations(measurementConfiguration.filter(c -> c.iterations() > 0).map(Measurement::iterations).orElse(Defaults.MEASUREMENT_ITERATIONS))
+                    .measurementTime(new TimeValue(measurementConfiguration.filter(c -> c.time() > 0).map(Measurement::time).orElse((int) Defaults.MEASUREMENT_TIME.getTime()), measurementConfiguration.map(Measurement::timeUnit).orElse(TimeUnit.SECONDS)));
 
             if (profilers.isPresent()) {
                 for (Class<? extends Profiler> profilerClass : profilers.get()) {
