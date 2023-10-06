@@ -16,7 +16,7 @@
         <module>junit5</module>
         <module>junit4</module>
         <module>core</module>
-        <module>spring-boot-3-integration</module>
+        <module>examples</module>
     </modules>
 
     <properties>
@@ -34,6 +34,7 @@
         <assertj.version>3.24.2</assertj.version>
 
         <enable.benchmark>false</enable.benchmark>
+        <mockito-core.version>5.3.1</mockito-core.version>
     </properties>
 
     <profiles>
@@ -78,6 +79,12 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

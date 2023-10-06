@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RuleWithJMHFeaturesTest {
 
     @Rule
-    public JMHJUnitRule jmhRule = new JMHJUnitRule();
+    public JMHJUnitRule jmhRule = new JMHJUnitRule(this);
     public AtomicInteger increment = new AtomicInteger(1);
     @Param({ "100", "200", "300" })
     private int param = 10;

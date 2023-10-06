@@ -39,6 +39,7 @@ public class JMHJUnitExtension implements InvocationInterceptor, ExecutionCondit
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
         Method testMethod = invocationContext.getExecutable();
         if (canRunBenchmark(testMethod) && BenchmarkRunnerCondition.shouldRunBenchmark(testMethod)) {
+            BenchmarkContext.setTestInstance(invocationContext.getTarget().get());
             benchmarkRunner.run(testMethod, testMethod.getAnnotation(BenchmarkTest.class).configuration());
             invocation.skip();
         } else {

@@ -15,20 +15,27 @@
  */
 package com.ringbufferlab.junit.benchmark;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * Rule to turn {@link org.junit.Test} annotated method into {@link org.openjdk.jmh.annotations.Benchmark} method
  */
 public class JMHJUnitRule implements TestRule {
     private final BenchmarkRunner benchmarkRunner;
+    private final Object testInstance;
 
-    public JMHJUnitRule() {
+    public JMHJUnitRule(Object testInstance) {
         this.benchmarkRunner = new BenchmarkRunner();
+        this.testInstance = testInstance;
     }
 
     @Override
@@ -40,12 +47,39 @@ public class JMHJUnitRule implements TestRule {
                 Class<?> testClass = this.getClass().getClassLoader().loadClass(description.getClassName());
                 Method testMethod = testClass.getMethod(description.getMethodName());
                 if (canRunBenchmark(testMethod) && BenchmarkRunnerCondition.shouldRunBenchmark(testMethod)) {
+                    BenchmarkContext.setTestInstance(testInstance);
+                    applyBefore();
                     benchmarkRunner.run(testMethod, testMethod.getAnnotation(BenchmarkTest.class).configuration());
+                    applyAfter();
                 } else {
                     base.evaluate();
                 }
             }
         };
+    }
+
+    private void applyBefore() {
+       applyAnnotated(Before.class);
+    }
+
+    private void applyAfter() {
+       applyAnnotated(After.class);
+    }
+
+    private void applyAnnotated(Class<? extends Annotation> annotation) {
+        Class<?> testInstanceClass = testInstance.getClass();
+        while(testInstanceClass != null) {
+            Arrays.stream(testInstance.getClass().getDeclaredMethods()).filter(m -> m.isAnnotationPresent(annotation))
+                    .forEach(m -> {
+                        try {
+                            m.setAccessible(true);
+                            m.invoke(testInstance);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+            testInstanceClass = testInstanceClass.getSuperclass();
+        }
     }
 
 

@@ -32,7 +32,7 @@ import org.openjdk.jmh.annotations.Warmup;
 public class SimpleRuleTest {
 
     @Rule
-    public JMHJUnitRule jmhRule = new JMHJUnitRule();
+    public JMHJUnitRule jmhRule = new JMHJUnitRule(this);
 
     @Test
     @Benchmark
