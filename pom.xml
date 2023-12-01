@@ -112,7 +112,7 @@
                     <header>${session.executionRootDirectory}/LICENSE.header</header>
                     <properties>
                         <year>${maven.build.timestamp}</year>
-                        <author>John Doe</author>
+                        <author>RingBufferLab</author>
                     </properties>
                     <includes>
                         <include>**/*.java</include>
