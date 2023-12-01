@@ -1,10 +1,8 @@
 # This workflow will build a Java project with Maven
 
-name: Java CI with Maven
+name: Maven publish
 
 on:
-  push:
-    branches: [ master ]
   workflow_dispatch:
     inputs:
       releaseVersion:
@@ -29,6 +27,8 @@ jobs:
         java-package: 'jdk'
         cache: 'maven'
         server-id: ossrh
+        server-username: MAVEN_USERNAME
+        server-password: MAVEN_PASSWORD
     - name: Configure Git User
       run: |
         git config user.email "contact@ringbufferlab.com"
@@ -50,17 +50,10 @@ jobs:
         fi
     - name: Release With Maven
       run: |
-        mvn -B -U \
-          -Pci-cd \
-          release:prepare \
-          release:perform \
-          javadoc:jar \
-          source:jar \
-          -s settings.xml \
-          -Dgpg.passphrase=${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }} \
-          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
-          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
-          deploy
+        mvn -Prelease release:prepare -DreleaseVersion=${{ github.event.inputs.releaseVersion }} -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} -Dgpg.passphrase=${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }} --batch-mode --no-transfer-progress
+    - name: Deploy With Maven
+      run: |
+        mvn release:perform
       env:
         MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}

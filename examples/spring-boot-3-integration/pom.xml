@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.ringbufferlab</groupId>
         <artifactId>junit-benchmark-examples</artifactId>
-        <version>0.1-SNASPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>junit-benchmark-spring-boot-3-integration</artifactId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>com.ringbufferlab</groupId>
             <artifactId>junit5-jmh-extension</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
