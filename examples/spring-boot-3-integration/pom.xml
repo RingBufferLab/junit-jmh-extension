@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.ringbufferlab</groupId>
         <artifactId>junit-benchmark-examples</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
 
     <artifactId>junit-benchmark-spring-boot-3-integration</artifactId>
