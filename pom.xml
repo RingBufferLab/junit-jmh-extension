@@ -9,6 +9,7 @@
 
     <name>JMH extension for JUnit</name>
     <description>Turn tests into benchmark with annotation</description>
+    <url>https://github.com/RingBufferLab/junit-jmh-extension</url>
 
     <modules>
         <module>junit5</module>
