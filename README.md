@@ -68,6 +68,7 @@ Add and configure JMH annotation processor
 <dependency>
     <groupId>com.ringbufferlab</groupId>
     <artifactId>junit5-jmh-extension</artifactId>
+    <version>0.1</version>
 </dependency>
 ```
 Minimal example
@@ -125,6 +126,7 @@ public class CloneTestContextTest extends CloneTestContextBase {
 <dependency>
     <groupId>com.ringbufferlab</groupId>
     <artifactId>junit4-jmh-rule</artifactId>
+    <version>0.1</version>
 </dependency>
 ```
 Simple example
