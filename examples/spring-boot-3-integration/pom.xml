@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.ringbufferlab.junit.benchmark</groupId>
-        <artifactId>examples</artifactId>
+        <groupId>com.ringbufferlab</groupId>
+        <artifactId>junit-benchmark-examples</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>spring-boot-3-integration</artifactId>
+    <artifactId>junit-benchmark-spring-boot-3-integration</artifactId>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
@@ -50,7 +50,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.ringbufferlab.junit.benchmark</groupId>
+            <groupId>com.ringbufferlab</groupId>
             <artifactId>junit5-jmh-extension</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

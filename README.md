@@ -66,7 +66,7 @@ Add and configure JMH annotation processor
 ## JUnit 5
 ```xml
 <dependency>
-    <groupId>com.ringbufferlab.junit.benchmark</groupId>
+    <groupId>com.ringbufferlab</groupId>
     <artifactId>junit5-jmh-extension</artifactId>
 </dependency>
 ```
@@ -123,7 +123,7 @@ public class CloneTestContextTest extends CloneTestContextBase {
 ## JUnit 4
 ```xml
 <dependency>
-    <groupId>com.ringbufferlab.junit.benchmark</groupId>
+    <groupId>com.ringbufferlab</groupId>
     <artifactId>junit4-jmh-rule</artifactId>
 </dependency>
 ```
@@ -225,7 +225,7 @@ public class EnableBenchmarkOnContext implements ApplicationContextAware {
 ```
 
 # Running only benchmark
-This extension automatically create a `@Tag`(junit5) or a `@Category` (junit4), named `com.ringbufferlab.junit.benchmark.BenchmarkTest` for method annotated with `@BenchmarkTest`.
+This extension automatically create a `@Tag`(junit5) or a `@Category` (junit4), named `com.ringbufferlab.BenchmarkTest` for method annotated with `@BenchmarkTest`.
 
 By configuring maven surfire plugin it is possible to run only benchmark tests
 ```xml 
@@ -242,7 +242,7 @@ By configuring maven surfire plugin it is possible to run only benchmark tests
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surfire-plugin.version}</version>
                     <configuration>
-                        <groups>com.ringbufferlab.junit.benchmark.BenchmarkTest</groups>
+                        <groups>com.ringbufferlab.BenchmarkTest</groups>
                         <systemProperties>
                             <benchmark>${enable.benchmark}</benchmark>
                         </systemProperties>
