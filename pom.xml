@@ -6,7 +6,7 @@
 
     <groupId>com.ringbufferlab</groupId>
     <artifactId>junit-benchmark-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1-SNASPSHOT</version>
     <packaging>pom</packaging>
 
     <name>JMH extension for JUnit</name>
